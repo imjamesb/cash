@@ -1,0 +1,35 @@
+{
+  "[typescript]": {
+    "editor.defaultFormatter": "denoland.vscode-deno",
+    "editor.tabSize": 2,
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": true,
+    "files.insertFinalNewline": true
+  },
+  "[json]": {
+    "editor.defaultFormatter": "denoland.vscode-deno",
+    "editor.tabSize": 2,
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": true,
+    "files.insertFinalNewline": true
+  },
+  "[markown]": {
+    "editor.defaultFormatter": "denoland.vscode-deno",
+    "editor.tabSize": 2,
+    "editor.detectIndentation": false,
+    "editor.insertSpaces": true,
+    "files.insertFinalNewline": true
+  },
+  "editor.defaultFormatter": "denoland.vscode-deno",
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "editor.insertSpaces": true,
+  "files.insertFinalNewline": true,
+  "deno.enable": true,
+  "deno.lint": true,
+  "deno.unstable": true,
+  "deno.suggest.autoImports": true,
+  "deno.suggest.imports.hosts": {
+    "https://deno.land/": true
+  }
+}
