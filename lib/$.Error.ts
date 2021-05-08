@@ -1,5 +1,5 @@
 // Imports
-import { CustomStack } from "https://deno.land/x/cstack@0.4.2/mod.ts";
+import { CustomStack } from "https://deno.land/x/cstack@0.4.6/mod.ts";
 
 export class $Error extends CustomStack {
   name = "$";
