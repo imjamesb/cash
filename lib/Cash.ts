@@ -301,9 +301,11 @@ export class Cash extends Callable<
         }
       }
     }
-    // todo(ihack2712): Escape the echoed variable.
+    echoed = echoed.replaceAll("$", "\\$").replaceAll('"', '\\"');
     return this.run(
-      (this.type === "pwsh" ? "Write-Output" : "echo") + " " + echoed,
+      (this.type === "pwsh"
+        ? "Write-Output -Message '" + echoed + "'"
+        : 'echo "' + echoed + '"'),
       options,
     );
   }
