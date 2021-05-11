@@ -4,8 +4,17 @@ import $ from "../../mod.ts";
 $.verbose = 3;
 
 async function echo() {
-  await $.echo`"; exit 1`;
-  await $.echo`'; exit 1`;
+  const list = [
+    '";#hello',
+    "';#hello",
+    "$env:Path",
+    "$env:PATH",
+    "hello && ::",
+  ];
+
+  for (const item of list) {
+    await $.echo(item);
+  }
 }
 
 try {
