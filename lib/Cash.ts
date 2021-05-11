@@ -48,6 +48,40 @@ export class Cash extends Callable<
   public stderr = true;
   public type!: "unix" | "pwsh" | "cmd" | "unknown";
 
+  public constructor(defaults?: Omit<ExecOptions, "command">) {
+    super((...args: Parameters<Cash["run"]>) => this.run(...args));
+    if (Deno.build.os === "windows") {
+      Object.defineProperty(this, "osType", {
+        configurable: false,
+        enumerable: true,
+        writable: false,
+        value: "windows",
+      });
+      this.setShell("pwsh");
+    } else {
+      Object.defineProperty(this, "osType", {
+        configurable: false,
+        enumerable: true,
+        writable: false,
+        value: "unix",
+      });
+      this.setShell("unix");
+    }
+    if (defaults) {
+      if (typeof defaults.shell !== "undefined") this.shell = defaults.shell;
+      if (typeof defaults.shellOptions !== "undefined") {
+        this.shellOptions = defaults.shellOptions;
+      }
+      if (typeof defaults.verbose !== "undefined") {
+        this.verbose = defaults.verbose;
+      }
+      if (typeof defaults.env !== "undefined") this.env = defaults.env;
+      if (typeof defaults.cwd !== "undefined") this.cwd = defaults.cwd;
+      if (typeof defaults.stdout !== "undefined") this.stdout = defaults.stdout;
+      if (typeof defaults.stderr !== "undefined") this.stderr = defaults.stderr;
+    }
+  }
+
   protected setType(kind: "unix" | "pwsh" | "cmd" | "unknown"): this {
     Object.defineProperty(this, "type", {
       configurable: false,
@@ -98,9 +132,11 @@ export class Cash extends Callable<
       path = exe;
       opts = options;
     }
-    if (!this.__which(path)) {
+    const which = this.__which(path);
+    if (!which) {
       throw new Error("Shell executable not found!");
     }
+    path = which;
     Object.defineProperties(this, {
       shell: {
         configurable: false,
@@ -116,40 +152,6 @@ export class Cash extends Callable<
       },
     });
     return this;
-  }
-
-  public constructor(defaults?: Omit<ExecOptions, "command">) {
-    super((...args: Parameters<Cash["run"]>) => this.run(...args));
-    if (Deno.build.os === "windows") {
-      Object.defineProperty(this, "osType", {
-        configurable: false,
-        enumerable: true,
-        writable: false,
-        value: "windows",
-      });
-      this.setShell("pwsh");
-    } else {
-      Object.defineProperty(this, "osType", {
-        configurable: false,
-        enumerable: true,
-        writable: false,
-        value: "unix",
-      });
-      this.setShell("unix");
-    }
-    if (defaults) {
-      if (typeof defaults.shell !== "undefined") this.shell = defaults.shell;
-      if (typeof defaults.shellOptions !== "undefined") {
-        this.shellOptions = defaults.shellOptions;
-      }
-      if (typeof defaults.verbose !== "undefined") {
-        this.verbose = defaults.verbose;
-      }
-      if (typeof defaults.env !== "undefined") this.env = defaults.env;
-      if (typeof defaults.cwd !== "undefined") this.cwd = defaults.cwd;
-      if (typeof defaults.stdout !== "undefined") this.stdout = defaults.stdout;
-      if (typeof defaults.stderr !== "undefined") this.stderr = defaults.stderr;
-    }
   }
 
   protected exec(
