@@ -15,6 +15,7 @@ async function echo() {
   for (const item of list) {
     await $.echo(item);
   }
+  console.log("Done!");
 }
 
 try {
