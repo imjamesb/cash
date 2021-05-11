@@ -103,7 +103,7 @@ export class Cash extends Callable<
         throw new Error("Cannot use cmd.exe on non-windows systems!");
       }
       path = "cmd.exe";
-      opts = ["/k"];
+      opts = ["/c"];
       type = "cmd";
     } else if (exe === "pwsh") {
       if (this.osType === "windows") {
