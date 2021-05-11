@@ -205,9 +205,15 @@ export class Cash extends Callable<
     return this.exec(command, options);
   }
 
+  protected pathVar() {
+    return this.osType === "windows"
+      ? /\\Git/g.test(this.env?.EXEPATH || "") ? "PATH" : "Path"
+      : "PATH";
+  }
+
   protected __path(): undefined | string[] {
     try {
-      const _ = Deno.env.get(this.osType === "windows" ? "Path" : "PATH");
+      const _ = Deno.env.get(this.pathVar());
       if (_) return _.split(/(:;)+/g);
     } catch {
       //
