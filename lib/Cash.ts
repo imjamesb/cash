@@ -48,7 +48,7 @@ export class Cash extends Callable<
   public stderr = true;
   public type!: "unix" | "pwsh" | "cmd" | "unknown";
 
-  public constructor(defaults?: Omit<ExecOptions, "command">) {
+  public constructor(defaults?: Partial<Omit<ExecOptions, "command">>) {
     super((...args: Parameters<Cash["run"]>) => this.run(...args));
     if (Deno.build.os === "windows") {
       Object.defineProperty(this, "osType", {
