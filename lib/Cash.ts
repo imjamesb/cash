@@ -132,6 +132,12 @@ export class Cash extends Callable<
       path = exe;
       opts = options;
     }
+    if (
+      this.osType === "windows" && /\\Git/g.test(this.env?.EXEPATH || "") &&
+      /\.exe/gi.test(path)
+    ) {
+      path = path.substring(0, path.length - 4);
+    }
     const which = this.__which(path);
     if (!which) {
       throw new Error("Shell executable not found!");
