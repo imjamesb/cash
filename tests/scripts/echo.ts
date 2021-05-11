@@ -13,6 +13,7 @@ async function echo() {
   ];
 
   for (const item of list) {
+    console.log((await $.echo`${item}`.stdout()).trim());
     console.assert(
       (await $.echo`${item}`.stdout()).trim() === item,
       "Values do not match!",
