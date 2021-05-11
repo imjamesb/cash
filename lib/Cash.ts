@@ -303,7 +303,7 @@ export class Cash extends Callable<
     }
     return this.run(
       (this.type === "pwsh"
-        ? "Write-Output -Message '" + echoed.replaceAll("'", "''") + "'"
+        ? "Write-Output '" + echoed.replaceAll("'", "''") + "'"
         : this.type === "cmd"
         ? "echo " + echoed.replaceAll(/./g, (str) => "^" + str)
         : 'echo "' + echoed.replaceAll("$", "\\$").replaceAll('"', '\\"') +
