@@ -92,7 +92,6 @@ export class ExecLazyResult {
   ) {
     const [promise, { resolve, reject }] = deferred<ExecResult>();
     this.#promise = promise;
-    promise.finally();
 
     const out: number[] = [];
     const err: number[] = [];
