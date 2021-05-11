@@ -214,7 +214,7 @@ export class Cash extends Callable<
   protected __path(): undefined | string[] {
     try {
       const _ = Deno.env.get(this.pathVar());
-      if (_) return _.split(/(:;)+/g);
+      if (_) return _.split(this.osType === "windows" ? ";" : ":");
     } catch {
       //
     }
@@ -236,7 +236,9 @@ export class Cash extends Callable<
         out = this`echo $PATH`;
       }
       if (out) {
-        return (await out.stdout()).trim().split(/(:;)+/g);
+        return (await out.stdout()).trim().split(
+          this.osType === "windows" ? ";" : ":",
+        );
       }
     } catch {
       //
