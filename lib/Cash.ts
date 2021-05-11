@@ -84,7 +84,7 @@ export class Cash extends Callable<
 
   protected setType(kind: "unix" | "pwsh" | "cmd" | "unknown"): this {
     Object.defineProperty(this, "type", {
-      configurable: false,
+      configurable: true,
       enumerable: true,
       writable: false,
       value: kind,
@@ -144,13 +144,13 @@ export class Cash extends Callable<
     path = which;
     Object.defineProperties(this, {
       shell: {
-        configurable: false,
+        configurable: true,
         enumerable: true,
         writable: false,
         value: path,
       },
       shellOptions: {
-        configurable: false,
+        configurable: true,
         enumerable: true,
         writable: false,
         value: opts,
