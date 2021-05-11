@@ -301,11 +301,13 @@ export class Cash extends Callable<
         }
       }
     }
-    echoed = echoed.replaceAll("$", "\\$").replaceAll('"', '\\"');
     return this.run(
       (this.type === "pwsh"
-        ? "Write-Output -Message '" + echoed + "'"
-        : 'echo "' + echoed + '"'),
+        ? "Write-Output -Message '" + echoed.replaceAll("'", "''") + "'"
+        : this.type === "cmd"
+        ? "echo " + echoed.replaceAll(/./g, (str) => "^" + str)
+        : 'echo "' + echoed.replaceAll("$", "\\$").replaceAll('"', '\\"') +
+          '"'),
       options,
     );
   }
