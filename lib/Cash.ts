@@ -156,6 +156,7 @@ export class Cash extends Callable<
         value: opts,
       },
     });
+    this.setType(type);
     return this;
   }
 
