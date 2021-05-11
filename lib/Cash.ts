@@ -254,7 +254,7 @@ export class Cash extends Callable<
       }
       const paths = this.__path();
       for (const path of paths || []) {
-        const _ = resolve(this.cwd, cmd);
+        const _ = resolve(path, cmd);
         if (existsSync(_)) return _;
       }
     } catch {
@@ -268,7 +268,7 @@ export class Cash extends Callable<
       if (__) return __;
       const paths = await this._path();
       for (const path of paths) {
-        const _ = resolve(this.cwd, cmd);
+        const _ = resolve(path, cmd);
         if (existsSync(_)) return _;
       }
     } catch {
