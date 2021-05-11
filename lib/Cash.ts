@@ -244,6 +244,11 @@ export class Cash extends Callable<
         const _ = resolve(this.cwd, cmd);
         return existsSync(_) ? _ : undefined;
       }
+      const paths = this.__path();
+      for (const path of paths || []) {
+        const _ = resolve(this.cwd, cmd);
+        if (existsSync(_)) return _;
+      }
     } catch {
       //
     }
