@@ -97,12 +97,14 @@ export class Cash extends Callable<
   public setShell(exe: string, ...options: string[]): this {
     let path: string | undefined = "";
     let opts: string[] = [];
+    let type: "unix" | "pwsh" | "cmd" | "unknown" = "unknown";
     if (exe === "cmd") {
       if (this.osType !== "windows") {
         throw new Error("Cannot use cmd.exe on non-windows systems!");
       }
       path = "cmd.exe";
       opts = ["/k"];
+      type = "cmd";
     } else if (exe === "pwsh") {
       if (this.osType === "windows") {
         path = "powershell.exe";
@@ -115,6 +117,7 @@ export class Cash extends Callable<
         }
       }
       opts = ["-Command"];
+      type = "pwsh";
     } else if (exe === "unix") {
       if (this.osType === "windows") {
         const PATH = (this.__path() || []).filter((_) =>
@@ -128,9 +131,11 @@ export class Cash extends Callable<
         path = "/bin/sh";
       }
       opts = ["-c"];
+      type = "unix";
     } else {
       path = exe;
       opts = options;
+      type = "unknown";
     }
     const which = this.__which(path);
     if (!which) {
