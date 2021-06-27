@@ -47,6 +47,7 @@ export class Cash extends Callable<
   public stdout = true;
   public stderr = true;
   public type!: "unix" | "pwsh" | "cmd" | "unknown";
+  public secrets: string[] = [];
 
   public constructor(defaults?: Partial<Omit<ExecOptions, "command">>) {
     super((...args: Parameters<Cash["run"]>) => this.run(...args));
@@ -79,6 +80,9 @@ export class Cash extends Callable<
       if (typeof defaults.cwd !== "undefined") this.cwd = defaults.cwd;
       if (typeof defaults.stdout !== "undefined") this.stdout = defaults.stdout;
       if (typeof defaults.stderr !== "undefined") this.stderr = defaults.stderr;
+      if (typeof defaults.secrets !== "undefined") {
+        this.secrets = defaults.secrets;
+      }
     }
   }
 
@@ -176,6 +180,7 @@ export class Cash extends Callable<
       cwd: this.cwd,
       stdout: this.stdout,
       stderr: this.stderr,
+      secrets: this.secrets,
     };
   }
 
@@ -310,6 +315,12 @@ export class Cash extends Callable<
           '"'),
       options,
     );
+  }
+
+  public secret(...secrets: string[]) {
+    for (const secret of secrets) {
+      this.secrets.push(secret);
+    }
   }
 }
 

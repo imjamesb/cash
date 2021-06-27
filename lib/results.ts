@@ -1,6 +1,6 @@
 // Imports
 import { iter } from "https://deno.land/std@0.95.0/io/util.ts";
-import { deferred } from "../lib/utils.ts";
+import { deferred, verbose } from "../lib/utils.ts";
 
 /**
  * These are the finished results of an execution, you don't have to `await`
@@ -89,6 +89,7 @@ export class ExecLazyResult {
     proc: Deno.Process<Deno.RunOptions>,
     stdoutStream?: Deno.Writer,
     stderrStream?: Deno.Writer,
+    secrets: string[] = [],
   ) {
     const [promise, { resolve, reject }] = deferred<ExecResult>();
     this.#promise = promise;
@@ -108,7 +109,7 @@ export class ExecLazyResult {
             out.push(byte);
             com.push(byte);
           }
-          if (stdoutStream) await stdoutStream.write(data);
+          if (stdoutStream) await verbose(stdoutStream, data, secrets);
         }
       })());
     }
@@ -120,7 +121,7 @@ export class ExecLazyResult {
             err.push(byte);
             com.push(byte);
           }
-          if (stderrStream) await Deno.stderr.write(data);
+          if (stderrStream) await verbose(stderrStream, data, secrets);
         }
       })());
     }

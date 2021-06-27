@@ -6,6 +6,7 @@ import {
   red,
 } from "https://deno.land/std@0.95.0/fmt/colors.ts";
 import { ExecLazyResult, ExecResult } from "./results.ts";
+import { verboseSync } from "./utils.ts";
 
 const L1 = bold(blue("$ "));
 const L2 = bold(blue("| "));
@@ -19,7 +20,13 @@ const L3S = bold(green("# "));
 export function exec(options: ExecOptions): ExecLazyResult {
   const { shell, shellOptions, command, env, cwd } = options;
   const verbose = Number(options.verbose ?? false);
-  if (verbose > 1) console.log(L1 + command.replaceAll("\n", "\n" + L2));
+  if (verbose > 1) {
+    verboseSync(
+      Deno.stdout,
+      L1 + command.replaceAll("\n", "\n" + L2) + "\n",
+      options.secrets || [],
+    );
+  }
   const proc = Deno.run({
     cmd: [
       shell,
@@ -38,14 +45,20 @@ export function exec(options: ExecOptions): ExecLazyResult {
     stdout = Deno.stdout;
     stderr = Deno.stderr;
   }
-  const result = new ExecLazyResult(proc, stdout, stderr);
+  const result = new ExecLazyResult(proc, stdout, stderr, options.secrets);
   if (verbose > 2) {
     result.then((_result) =>
-      console.log(L3S + "Process exited with a zero-exit code.")
+      verboseSync(
+        Deno.stdout,
+        L3S + "Process exited with a zero-exit code.\n",
+        options.secrets || [],
+      )
     ).catch((result: ExecResult) =>
-      console.log(
-        L3F + "Process exited with a non zero-exit code (%d).",
-        result.code(),
+      verboseSync(
+        Deno.stdout,
+        L3F + "Process exited with a non zero-exit code (" + result.code() +
+          ").\n",
+        options.secrets || [],
       )
     );
   }
@@ -78,4 +91,6 @@ export interface ExecOptions {
   stderr?: boolean;
   /** The shell's current working directory. Defaults to inherit. */
   cwd?: string;
+  /** Pieces of strings to ignore when outputting verbose information. */
+  secrets?: string[];
 }

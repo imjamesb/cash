@@ -32,3 +32,30 @@ export function deferred<X = any>(): [Promise<X>, {
   });
   return [promise, { resolve, reject }];
 }
+
+const decoder = new TextDecoder();
+const encoder = new TextEncoder();
+
+export async function verbose(
+  stream: Deno.Writer,
+  data: string | Uint8Array,
+  secrets: string[],
+): Promise<void> {
+  if (data instanceof Uint8Array) data = decoder.decode(data);
+  for (const secret of secrets) {
+    data = (data as string).replaceAll(secret, "***");
+  }
+  await stream.write(encoder.encode(data));
+}
+
+export function verboseSync(
+  stream: Deno.WriterSync,
+  data: string | Uint8Array,
+  secrets: string[],
+) {
+  if (data instanceof Uint8Array) data = decoder.decode(data);
+  for (const secret of secrets) {
+    data = (data as string).replaceAll(secret, "***");
+  }
+  stream.writeSync(encoder.encode(data));
+}
